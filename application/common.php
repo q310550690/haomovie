@@ -50,3 +50,7 @@ function utfToGbk($d){
 function echoHtml($html){
     return htmlentities($html,ENT_QUOTES,"UTF-8");
 }
+// var_dump 输出
+function dv($d){
+    var_dump($d);
+}

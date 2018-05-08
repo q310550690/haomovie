@@ -3,6 +3,8 @@ namespace app\api\controller;
 use QL\QueryList;
 class Haomovie
 {
+    private $host = 'http://www.hao6v.com';
+
     public function index()
     {
         return '什么鬼啊';
@@ -26,11 +28,9 @@ class Haomovie
             // 得到重定向的数据
             $rcb =gbkToUtf( httpPost($redUrl.'&page='.$page));
             if($rcb['cinfo']['http_code'] == 200){
-                $returnArr = array('err'=>1,'msg'=>'搜索成功','data'=>$this->splitSearch($rcb['rsp']));
-                return json($returnArr);
+                return json(array('err'=>1,'msg'=>'搜索成功','data'=>$this->splitSearch($rcb['rsp'])));
             }else{
-                $returnArr = array('err'=>0,'msg'=>'未知错误');
-                return json($returnArr);
+                return json(array('err'=>0,'msg'=>'未知错误'));
             }
         }else{
             
@@ -54,7 +54,7 @@ class Haomovie
                 if(!empty($movieRe[1][0])){
                     $resut[$key]['title']=$movie;
                     $resut[$key]['name']=$movieRe[1][0];
-                    $resut[$key]['url']=str_replace('http://www.hao6v.com','',$url_array[1][0]);
+                    $resut[$key]['url']=str_replace($this->host,'',$url_array[1][0]);
                 }
             }
             return $resut;
@@ -66,25 +66,124 @@ class Haomovie
     public function movieInfo(){
         $url = input('url');
         if(!empty($url)){
-            $cb = httpPost('http://www.hao6v.com'.$url,'','GET');
+            $cb = httpPost($this->host.$url,'','GET');
             // 判定请求是否成功
             if($cb['cinfo']['http_code'] == 200){
                 // 解析电影详情
                 $movie_info = gbkToUtf($cb['rsp']);
-                $this->splitMovieInfo($movie_info);
+                // $this->splitMovieInfo($movie_info);
+                return json(array('err'=>1,'msg'=>'获取数据成功','data'=>$this->splitMovieInfo($movie_info)));
             }else{
-                $returnArr = array('err'=>0,'msg'=>'网络请求失败');
-                return json($returnArr);
+                return json(array('err'=>0,'msg'=>'网络请求失败'));
             }
         }else{
-            $returnArr = array('err'=>0,'msg'=>'未收录此电影');
-            return json($returnArr);
+            return json(array('err'=>0,'msg'=>'未收录此电影'));
         }
     }
     // 解析电影详情
     private function splitMovieInfo($info){
         $html = str_replace('gb2312','utf8',$info);//改变mate为utf8编码
+        $returnMovie = [];
         $ql = QueryList::html($html);
-        // echo $html;
+        $movie_title = $ql->find('h1')->text();//电影标题
+        $movie_img = $ql->find('#endText img:eq(0)')->src;//封面图
+        $movie_img_prv = $ql->find('#endText img:not(:first)')->attrs('src')->all();//预览图
+        // 解析出电影介绍
+        $movie_info = $ql->find('#endText > p')->html();// 电影介绍
+        $movie_dinfo = [];
+        foreach (explode('◎',$movie_info) as $key => $value) {
+            // dv($value);
+            if(!empty($value)){
+                // 替换主演名单里面的空格为,
+                $v = str_replace('　　　　　　',',',$value);
+                // 去除所有空格
+                $v = str_replace(array("\r\n", "\n","\t",'　'),'',$v);
+                // 去除html标签
+                $v = strip_tags($v);
+                // dv($v);
+                if(!empty($v)){
+                    // 分类
+                    if(strpos($v,'译名') === 0){
+                        $movie_dinfo +=array('译名'=>str_replace('译名','',$v));
+                    }
+                    if(strpos($v,'片名') === 0){
+                        $movie_dinfo +=array('片名'=>str_replace('片名','',$v));
+                    }
+                    if(strpos($v,'年代') === 0){
+                        $movie_dinfo +=array('年代'=>str_replace('年代','',$v));
+                    }
+                    if(strpos($v,'产地') === 0){
+                        $movie_dinfo +=array('产地'=>str_replace('产地','',$v));
+                    }
+                    if(strpos($v,'类别') === 0){
+                        $movie_dinfo +=array('类别'=>str_replace('类别','',$v));
+                    }
+                    if(strpos($v,'语言') === 0){
+                        $movie_dinfo +=array('语言'=>str_replace('语言','',$v));
+                    }
+                    if(strpos($v,'字幕') === 0){
+                        $movie_dinfo +=array('字幕'=>str_replace('字幕','',$v));
+                    }
+                    if(strpos($v,'上映日期') === 0){
+                        $movie_dinfo +=array('上映日期'=>str_replace('上映日期','',$v));
+                    }
+                    if(strpos($v,'豆瓣评分') === 0){
+                        $movie_dinfo +=array('豆瓣评分'=>str_replace('豆瓣评分','',$v));
+                    }
+                    if(strpos($v,'IMDb评分') === 0){
+                        $movie_dinfo +=array('IMDb评分'=>str_replace('IMDb评分','',$v));
+                    }
+                    if(strpos($v,'片长') === 0){
+                        $movie_dinfo +=array('片长'=>str_replace('片长','',$v));
+                    }
+                    if(strpos($v,'导演') === 0){
+                        $movie_dinfo +=array('导演'=>str_replace('导演','',$v));
+                    }
+                    if(strpos($v,'主演') === 0){
+                        $movie_dinfo +=array('主演'=>str_replace('主演','',$v));
+                    }
+                    if(strpos($v,'简介') === 0){
+                        $movie_dinfo +=array('简介'=>str_replace('简介','',$v));
+                    }
+                }
+            }
+        }
+        // 解析下载地址
+        $movie_dow_html = $ql->find('#endText > table')->htmls();
+        $movie_dow = [];
+        foreach ($movie_dow_html as $key => $value) {
+            $table_ql = QueryList::html($value);
+            $tds = $table_ql->find('td')->htmls();
+            $movie_dow[$key]['title']=$table_ql->find('td > strong')->text();//表格名字
+            $movie_dow[$key]['dow'] = [];
+            foreach ($tds as $key2 => $value2) {
+                $tds_ql = QueryList::html($value2);
+                // 判定有没有连接
+                $a = $tds_ql->find('a')->href;
+                $a_text = $tds_ql->find('a')->text();
+                if(!empty($a)){
+                    // 分割名字与地址
+                    $ap = explode('：',$tds[$key2]);
+                    // 判定是否分隔成功，不成功去读取a标签里面的名字
+                    if(count($ap) <= 1){
+                        array_push($movie_dow[$key]['dow'],array($a_text=>$a));
+                    }else{
+                        if(strpos($ap[0],'网盘') === 0){
+                            array_push($movie_dow[$key]['dow'],array('网盘'=>$a,'密码'=>$ap[2]));
+                        }else{
+                            array_push($movie_dow[$key]['dow'],array($ap[0]=>$a));
+                        }
+                    }
+                }
+            }
+            
+        }
+        // dv($movie_dow);
+        // 返回数据
+        $returnMovie['info'] = $movie_dinfo;
+        $returnMovie['img_title'] = $movie_img;
+        $returnMovie['img_prv'] = $movie_img_prv;
+        $returnMovie['dow'] = $movie_dow;
+        return $returnMovie;
     }
 }
