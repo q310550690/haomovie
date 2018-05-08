@@ -18,4 +18,4 @@
 2. QueryList
 
 ## 项目地址
-[地址](https://github.com/q310550690/haomovie)
+[https://github.com/q310550690/haomovie](https://github.com/q310550690/haomovie)
