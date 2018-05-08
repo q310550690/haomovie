@@ -17,7 +17,7 @@ class Haomovie
     // 搜索电影名字
     public function getSearch(){
         $name = input('name');
-        $page = input('page')?input('page'):0;
+        $page = input('page') ?? 0;
         $movieName = urlencode(utfToGbk($name));
         $url = 'http://so.hao6v.com/e/search/index.php';
         $data = 'show=title%2Csmalltext&tempid=1&keyboard='.$movieName.'&tbname=article&x=0&y=0';
@@ -88,6 +88,7 @@ class Haomovie
         $movie_title = $ql->find('h1')->text();//电影标题
         $movie_img = $ql->find('#endText img:eq(0)')->src;//封面图
         $movie_img_prv = $ql->find('#endText img:not(:first)')->attrs('src')->all();//预览图
+        $movie_shuo_url = $ql->find('#ifc')->src; //解析评论urlid
         // 解析出电影介绍
         $movie_info = $ql->find('#endText > p')->html();// 电影介绍
         $movie_dinfo = [];
@@ -176,14 +177,64 @@ class Haomovie
                     }
                 }
             }
-            
         }
-        // dv($movie_dow);
         // 返回数据
         $returnMovie['info'] = $movie_dinfo;
         $returnMovie['img_title'] = $movie_img;
         $returnMovie['img_prv'] = $movie_img_prv;
         $returnMovie['dow'] = $movie_dow;
+        // $returnMovie['shuo_id'] = explode('?',$movie_shuo_url)[1];
+        $returnMovie['shuo_id'] = $movie_shuo_url;
         return $returnMovie;
+    }
+    // 获取电影评论
+    public function shuoInfo(){
+        $url = '/e/pl/?'.$_SERVER['QUERY_STRING'];
+        $page = input('page') ?? 0;
+        if(!empty($url)){
+            $cb = httpPost($this->host.$url.'&page='.$page,'GET');
+            // 判定请求是否成功
+            if($cb['cinfo']['http_code'] == 200){
+                // 解析电影详情
+                $movie_shuo = gbkToUtf($cb['rsp']);
+                $this->splitShoInfo($movie_shuo);
+                // return json(array('err'=>1,'msg'=>'获取数据成功','data'=>$this->splitShoInfo($movie_shuo)));
+            }else{
+                return json(array('err'=>0,'msg'=>'网络请求失败'));
+            }
+        }else{
+            return json(array('err'=>0,'msg'=>'未收录此电影'));
+        }
+    }
+    // 解析电影评论
+    private function splitShoInfo($info){
+        $html = str_replace('gb2312','utf8',$info);//改变mate为utf8编码
+        $return = [];
+        $ql = QueryList::html($html);
+        $shuo_pf = $ql->find('#showpf')->text();//评分
+        $shuo_pf_num = $ql->find('#fennum')->text();//评分人数
+        $shuo_pl_html = $ql->find('table[cellpadding=4]')->htmls();//评论楼数
+        $shuo_pl_text = [];
+        foreach ($shuo_pl_html as $key => $value) {
+            // dv($value);
+            $pl_line = QueryList::html($value);
+            $shuo_pl_text[$key]['name'] = preg_replace('/\xc2\xa0/','',explode('发表于',$pl_line->find('td:eq(0)')->text())[0]);//发表人昵称
+            $shuo_pl_text[$key]['time'] = preg_replace('/\xc2\xa0/','',explode('发表于',$pl_line->find('td:eq(0)')->text())[1]);//时间
+            $shuo_pl_text[$key]['support'] = $pl_line->find('span:eq(0)')->text();//支持人数
+            $shuo_pl_text[$key]['opposition'] = $pl_line->find('span:eq(1)')->text();//反对人数
+            foreach ($pl_line->find('td:eq(2)')->htmls() as $key2 => $value2) {
+                $pl = QueryList::html($value2);
+                // echo
+                // 查找是否有盖楼
+                $pl_gl = $pl->find('.ecomment')->htmls();
+                if(count($pl_gl)>=1){
+                    // dv($pl_gl);
+                }else{
+                    $shuo_pl_text[$key]['shuo'][$key2]=$value2;
+                }
+                // dv($value2);
+            }
+        }
+        dv($shuo_pl_text);
     }
 }
