@@ -100,50 +100,57 @@
  * @apiParam {String} shuo_id 直接在/api/haomovie/shuoInfo/后面拼接上shuo_id.
  * @apiParam {Number} page 分页数，默认0.
  *
- * @apiSuccess {String} name 评论者昵称
- * @apiSuccess {String} time 评论时间
- * @apiSuccess {Number} support 支持数
- * @apiSuccess {Number} opposition 反对数
- * @apiSuccess {Array} shuo 评论条数
- * @apiSuccess {JSON} shuo.name 评论者昵称
- * @apiSuccess {JSON} shuo.pl 评论内容
+ * @apiSuccess {String} pf 评论总分数
+ * @apiSuccess {String} pfnum 评分人数
+ * @apiSuccess {Array} plarr 评论内容
+ * @apiSuccess {String} plarr.name 评论者昵称
+ * @apiSuccess {String} plarr.time 评论时间
+ * @apiSuccess {Number} plarr.support 支持数
+ * @apiSuccess {Number} plarr.opposition 反对数
+ * @apiSuccess {Array} plarr.shuo 评论条数
+ * @apiSuccess {JSON} plarr.shuo.name 评论者昵称
+ * @apiSuccess {JSON} plarr.shuo.pl 评论内容
  * 
  * @apiSuccessExample Success:
 {
     "err": 1,
     "msg": "获取数据成功",
-    "data": [
-        {
-            "name": "匿名",
-            "time": "2018-05-02 09:31:03",
-            "support": "1",
-            "opposition": "0",
-            "shuo": [
-                {
-                    "name": "匿名",
-                    "pl": "第二季第一集百度云下不了啊！！！"
-                }
-            ]
-        },
-        {
-            "name": "匿名",
-            "time": "2018-04-25 12:59:47",
-            "support": "3",
-            "opposition": "1",
-            "shuo": [
-                {
-                    "name": "匿名",
-                    "pl": "下不了你发你妹啊！版权不让下就在6V下架啊！"
-                },
-                {
-                    "name": "匿名",
-                    "pl": "下载版权问题网站早就提示过如何应对。用旧版迅雷下。不懂多看多问。别只会做一个SB瞎BB。"
-                },
-                ...
-            ]
-        },
-        ...
-    ]
+    "data": {
+        "pf": "4",
+        "pfnum": "1223",
+        "plarr": [
+            {
+                "name": "匿名",
+                "time": "2018-05-02 09:31:03",
+                "support": "2",
+                "opposition": "0",
+                "shuo": [
+                    {
+                        "name": "匿名",
+                        "pl": "第二季第一集百度云下不了啊！！！"
+                    }
+                ]
+            },
+            {
+                "name": "匿名",
+                "time": "2018-04-25 12:59:47",
+                "support": "3",
+                "opposition": "1",
+                "shuo": [
+                    {
+                        "name": "匿名",
+                        "pl": "下不了你发你妹啊！版权不让下就在6V下架啊！"
+                    },
+                    {
+                        "name": "匿名",
+                        "pl": "下载版权问题网站早就提示过如何应对。用旧版迅雷下。不懂多看多问。别只会做一个SB瞎BB。"
+                    },
+                    ...
+                ]
+            },
+            ...
+        ]
+    }
 }
  *
  * @apiError err 1成功，其它值看msg字段
