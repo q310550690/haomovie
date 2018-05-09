@@ -198,6 +198,7 @@ class Haomovie
             if($cb['cinfo']['http_code'] == 200){
                 // 解析电影详情
                 $movie_shuo = gbkToUtf($cb['rsp']);
+                // $this->splitShoInfo($movie_shuo);
                 return json(array('err'=>1,'msg'=>'获取数据成功','data'=>$this->splitShoInfo($movie_shuo)));
             }else{
                 return json(array('err'=>0,'msg'=>'网络请求失败'));
@@ -211,8 +212,9 @@ class Haomovie
         $html = str_replace('gb2312','utf8',$info);//改变mate为utf8编码
         $return = [];
         $ql = QueryList::html($html);
-        $shuo_pf = $ql->find('#showpf')->text();//评分
-        $shuo_pf_num = $ql->find('#fennum')->text();//评分人数
+        preg_match_all('/<li class="current-rating(.*)"><\/li>/U',$ql->getHtml(),$pf);//评分
+        $return['pf'] = $pf[1][0];
+        $return['pfnum'] = $ql->find('#fennum')->text();//评分人数
         $shuo_pl_html = $ql->find('table[cellpadding=4]')->htmls();//评论楼数
         $shuo_pl_text = [];
         foreach ($shuo_pl_html as $key => $value) {
@@ -250,6 +252,7 @@ class Haomovie
                 }
             }
         }
-        return $shuo_pl_text;
+        $return['plarr'] = $shuo_pl_text;
+        return $return;
     }
 }
