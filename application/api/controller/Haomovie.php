@@ -234,8 +234,8 @@ class Haomovie
                     $shuo_pl_text[$key]['shuo'][$key2]['pl']=$ex_arr[count($ex_arr)-1];
                     $pl_gl_name = $pl->find('.ecomment .ecommentauthor')->htmls(); // 评论的名字
                     for ($i=(int)count($ex_arr); $i > 1; $i--) {
-                        $shuo_pl_text[$key]['shuo'][$key2+$i2]['name']=str_replace(array('网友 ',' 的原文：','\r\n','\t'),'',$pl_gl_name[$i2-1]);
-                        $shuo_pl_text[$key]['shuo'][$key2+$i2]['pl']=strip_tags($ex_arr[$i-2]);
+                        $shuo_pl_text[$key]['shuo'][$key2+$i2]['name']=str_replace(array('网友 ',' 的原文：',"\r\n","\t"),'',$pl_gl_name[$i2-1]);
+                        $shuo_pl_text[$key]['shuo'][$key2+$i2]['pl']=str_replace(array("\r\n","\t"),'',strip_tags($ex_arr[$i-2]));
                         $i2++;
                     }
                     // 设置最深的那个评论
@@ -246,7 +246,7 @@ class Haomovie
                     // dv($shuo_pl_text[$key]['shuo']);
                 }else{
                     $shuo_pl_text[$key]['shuo'][$key2]['name']=$nick;
-                    $shuo_pl_text[$key]['shuo'][$key2]['pl']=strip_tags($value2);
+                    $shuo_pl_text[$key]['shuo'][$key2]['pl']=str_replace(array("\r\n","\t"),'',strip_tags($value2));
                 }
             }
         }
