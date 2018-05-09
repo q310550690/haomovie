@@ -1,6 +1,7 @@
 <?php
 namespace app\api\controller;
 use QL\QueryList;
+use QL\Dom\Elements;
 class Haomovie
 {
     private $host = 'http://www.hao6v.com';
@@ -197,8 +198,7 @@ class Haomovie
             if($cb['cinfo']['http_code'] == 200){
                 // 解析电影详情
                 $movie_shuo = gbkToUtf($cb['rsp']);
-                $this->splitShoInfo($movie_shuo);
-                // return json(array('err'=>1,'msg'=>'获取数据成功','data'=>$this->splitShoInfo($movie_shuo)));
+                return json(array('err'=>1,'msg'=>'获取数据成功','data'=>$this->splitShoInfo($movie_shuo)));
             }else{
                 return json(array('err'=>0,'msg'=>'网络请求失败'));
             }
@@ -216,25 +216,40 @@ class Haomovie
         $shuo_pl_html = $ql->find('table[cellpadding=4]')->htmls();//评论楼数
         $shuo_pl_text = [];
         foreach ($shuo_pl_html as $key => $value) {
-            // dv($value);
             $pl_line = QueryList::html($value);
-            $shuo_pl_text[$key]['name'] = preg_replace('/\xc2\xa0/','',explode('发表于',$pl_line->find('td:eq(0)')->text())[0]);//发表人昵称
-            $shuo_pl_text[$key]['time'] = preg_replace('/\xc2\xa0/','',explode('发表于',$pl_line->find('td:eq(0)')->text())[1]);//时间
+            $nick = preg_replace('/\xc2\xa0/','',explode('发表于',$pl_line->find('td:eq(0)')->text())[0]);//发表人昵称
+            $time = preg_replace('/\xc2\xa0/','',explode('发表于',$pl_line->find('td:eq(0)')->text())[1]);//时间
+            $shuo_pl_text[$key]['name'] = $nick;
+            $shuo_pl_text[$key]['time'] = $time;
             $shuo_pl_text[$key]['support'] = $pl_line->find('span:eq(0)')->text();//支持人数
             $shuo_pl_text[$key]['opposition'] = $pl_line->find('span:eq(1)')->text();//反对人数
             foreach ($pl_line->find('td:eq(2)')->htmls() as $key2 => $value2) {
                 $pl = QueryList::html($value2);
-                // echo
                 // 查找是否有盖楼
                 $pl_gl = $pl->find('.ecomment')->htmls();
                 if(count($pl_gl)>=1){
-                    // dv($pl_gl);
+                    $ex_arr=explode('</div>',$value2);
+                    $i2 = 1;
+                    $shuo_pl_text[$key]['shuo'][$key2]['name']=$nick;
+                    $shuo_pl_text[$key]['shuo'][$key2]['pl']=$ex_arr[count($ex_arr)-1];
+                    $pl_gl_name = $pl->find('.ecomment .ecommentauthor')->htmls(); // 评论的名字
+                    for ($i=(int)count($ex_arr); $i > 1; $i--) {
+                        $shuo_pl_text[$key]['shuo'][$key2+$i2]['name']=str_replace(array('网友 ',' 的原文：','\r\n','\t'),'',$pl_gl_name[$i2-1]);
+                        $shuo_pl_text[$key]['shuo'][$key2+$i2]['pl']=strip_tags($ex_arr[$i-2]);
+                        $i2++;
+                    }
+                    // 设置最深的那个评论
+                    $shuo_pl_text[$key]['shuo'][$i2-1]['pl']=$pl->find('.ecomment .ecommenttext')->text();
+                    // 对数组进行排序 先评论的在前面，不排序的话反过来
+                    krsort($shuo_pl_text[$key]['shuo']);
+                    $shuo_pl_text[$key]['shuo'] = array_values($shuo_pl_text[$key]['shuo']);
+                    // dv($shuo_pl_text[$key]['shuo']);
                 }else{
-                    $shuo_pl_text[$key]['shuo'][$key2]=$value2;
+                    $shuo_pl_text[$key]['shuo'][$key2]['name']=$nick;
+                    $shuo_pl_text[$key]['shuo'][$key2]['pl']=strip_tags($value2);
                 }
-                // dv($value2);
             }
         }
-        dv($shuo_pl_text);
+        return $shuo_pl_text;
     }
 }
