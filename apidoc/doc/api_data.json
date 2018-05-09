@@ -223,49 +223,70 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "name",
+            "field": "pf",
+            "description": "<p>评论总分数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "pfnum",
+            "description": "<p>评分人数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "plarr",
+            "description": "<p>评论内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "plarr.name",
             "description": "<p>评论者昵称</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "time",
+            "field": "plarr.time",
             "description": "<p>评论时间</p>"
           },
           {
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "support",
+            "field": "plarr.support",
             "description": "<p>支持数</p>"
           },
           {
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "opposition",
+            "field": "plarr.opposition",
             "description": "<p>反对数</p>"
           },
           {
             "group": "Success 200",
             "type": "Array",
             "optional": false,
-            "field": "shuo",
+            "field": "plarr.shuo",
             "description": "<p>评论条数</p>"
           },
           {
             "group": "Success 200",
             "type": "JSON",
             "optional": false,
-            "field": "shuo.name",
+            "field": "plarr.shuo.name",
             "description": "<p>评论者昵称</p>"
           },
           {
             "group": "Success 200",
             "type": "JSON",
             "optional": false,
-            "field": "shuo.pl",
+            "field": "plarr.shuo.pl",
             "description": "<p>评论内容</p>"
           }
         ]
@@ -273,7 +294,7 @@
       "examples": [
         {
           "title": "Success:",
-          "content": "{\n    \"err\": 1,\n    \"msg\": \"获取数据成功\",\n    \"data\": [\n        {\n            \"name\": \"匿名\",\n            \"time\": \"2018-05-02 09:31:03\",\n            \"support\": \"1\",\n            \"opposition\": \"0\",\n            \"shuo\": [\n                {\n                    \"name\": \"匿名\",\n                    \"pl\": \"第二季第一集百度云下不了啊！！！\"\n                }\n            ]\n        },\n        {\n            \"name\": \"匿名\",\n            \"time\": \"2018-04-25 12:59:47\",\n            \"support\": \"3\",\n            \"opposition\": \"1\",\n            \"shuo\": [\n                {\n                    \"name\": \"匿名\",\n                    \"pl\": \"下不了你发你妹啊！版权不让下就在6V下架啊！\"\n                },\n                {\n                    \"name\": \"匿名\",\n                    \"pl\": \"下载版权问题网站早就提示过如何应对。用旧版迅雷下。不懂多看多问。别只会做一个SB瞎BB。\"\n                },\n                ...\n            ]\n        },\n        ...\n    ]\n}",
+          "content": "{\n    \"err\": 1,\n    \"msg\": \"获取数据成功\",\n    \"data\": {\n        \"pf\": \"4\",\n        \"pfnum\": \"1223\",\n        \"plarr\": [\n            {\n                \"name\": \"匿名\",\n                \"time\": \"2018-05-02 09:31:03\",\n                \"support\": \"2\",\n                \"opposition\": \"0\",\n                \"shuo\": [\n                    {\n                        \"name\": \"匿名\",\n                        \"pl\": \"第二季第一集百度云下不了啊！！！\"\n                    }\n                ]\n            },\n            {\n                \"name\": \"匿名\",\n                \"time\": \"2018-04-25 12:59:47\",\n                \"support\": \"3\",\n                \"opposition\": \"1\",\n                \"shuo\": [\n                    {\n                        \"name\": \"匿名\",\n                        \"pl\": \"下不了你发你妹啊！版权不让下就在6V下架啊！\"\n                    },\n                    {\n                        \"name\": \"匿名\",\n                        \"pl\": \"下载版权问题网站早就提示过如何应对。用旧版迅雷下。不懂多看多问。别只会做一个SB瞎BB。\"\n                    },\n                    ...\n                ]\n            },\n            ...\n        ]\n    }\n}",
           "type": "json"
         }
       ]
