@@ -34,7 +34,7 @@ class Haomovie
                 return json(array('err'=>0,'msg'=>'未知错误'));
             }
         }else{
-            
+            return json(array('err'=>0,'msg'=>'参数不正确'));
         }
     }
     // 截取搜索电影结果
