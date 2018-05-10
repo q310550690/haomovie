@@ -16,7 +16,14 @@
 8. ~~搜索接口解析~~
 
 ## 使用说明
+clone 项目后运行下面代码安装TP依赖及其他vendor
+```
+composer update topthink/framework
+```
+使用文档在此路径下
+```
 apidoc\doc\index.html 
+```
 
 ## 感谢以下开源项目
 1. ThinkPHP
