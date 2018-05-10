@@ -1,5 +1,89 @@
 [
   {
+    "type": "get",
+    "url": "/api/DouBan/getMovieInfo/",
+    "title": "getMovieInfo",
+    "version": "0.0.0",
+    "name": "getMovieInfo",
+    "group": "DouBan",
+    "description": "<p>获取电影信息</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>电影名称</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "rating",
+            "description": "<p>评分</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "genres",
+            "description": "<p>类型</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "casts",
+            "description": "<p>演员</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "directors",
+            "description": "<p>剧照</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "images",
+            "description": "<p>封面图</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success:",
+          "content": "{\n    \"err\": 1,\n    \"msg\": \"获取数据成功\",\n    \"data\": {\n        \"count\": 1,\n        \"start\": 0,\n        \"total\": 5,\n        \"subjects\": [\n            {\n                \"rating\": {\n                    \"max\": 10,\n                    \"average\": 9.3,\n                    \"stars\": \"50\",\n                    \"min\": 0\n                },\n                \"genres\": [\n                    \"科幻\",\n                    \"西部\"\n                ],\n                \"title\": \"西部世界 第二季\",\n                \"casts\": [\n                    {\n                        \"alt\": \"https://movie.douban.com/celebrity/1035652/\",\n                        \"avatars\": {\n                            \"small\": \"http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1770.jpg\",\n                            \"large\": \"http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1770.jpg\",\n                            \"medium\": \"http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1770.jpg\"\n                        },\n                        \"name\": \"埃文·蕾切尔·伍德\",\n                        \"id\": \"1035652\"\n                    },\n                    ...\n                ],\n                \"collect_count\": 6073,\n                \"original_title\": \"Westworld\",\n                \"subtype\": \"tv\",\n                \"directors\": [\n                    {\n                        \"alt\": \"https://movie.douban.com/celebrity/1332531/\",\n                        \"avatars\": {\n                            \"small\": \"http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1383990641.33.jpg\",\n                            \"large\": \"http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1383990641.33.jpg\",\n                            \"medium\": \"http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1383990641.33.jpg\"\n                        },\n                        \"name\": \"理查德·J·刘易斯\",\n                        \"id\": \"1332531\"\n                    }\n                ],\n                \"year\": \"2018\",\n                \"images\": {\n                    \"small\": \"http://img7.doubanio.com/view/photo/s_ratio_poster/public/p2517077652.jpg\",\n                    \"large\": \"http://img7.doubanio.com/view/photo/s_ratio_poster/public/p2517077652.jpg\",\n                    \"medium\": \"http://img7.doubanio.com/view/photo/s_ratio_poster/public/p2517077652.jpg\"\n                },\n                \"alt\": \"https://movie.douban.com/subject/26887174/\",\n                \"id\": \"26887174\"\n            }\n        ],\n        \"title\": \"搜索 \\\"西部世界\\\" 的结果\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "err",
+            "description": "<p>1成功，其它值看msg字段</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./example.js",
+    "groupTitle": "DouBan"
+  },
+  {
     "success": {
       "fields": {
         "Success 200": [

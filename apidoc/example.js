@@ -155,3 +155,84 @@
  *
  * @apiError err 1成功，其它值看msg字段
  */
+
+ /**
+ * @api {get} /api/DouBan/getMovieInfo/ getMovieInfo
+ * @apiVersion 0.0.0
+ * @apiName getMovieInfo
+ * @apiGroup DouBan
+ * @apiDescription 获取电影信息
+ * 
+ * @apiParam {String} name 电影名称
+ *
+ * @apiSuccess {Array} rating 评分
+ * @apiSuccess {String} rating.average 得分
+ * @apiSuccess {Array} genres 类型
+ * @apiSuccess {Array} casts 演员
+ * @apiSuccess {Array} directors 剧照
+ * @apiSuccess {Array} images 封面图
+ * @apiSuccessExample Success:
+{
+    "err": 1,
+    "msg": "获取数据成功",
+    "data": {
+        "count": 1,
+        "start": 0,
+        "total": 5,
+        "subjects": [
+            {
+                "rating": {
+                    "max": 10,
+                    "average": 9.3,
+                    "stars": "50",
+                    "min": 0
+                },
+                "genres": [
+                    "科幻",
+                    "西部"
+                ],
+                "title": "西部世界 第二季",
+                "casts": [
+                    {
+                        "alt": "https://movie.douban.com/celebrity/1035652/",
+                        "avatars": {
+                            "small": "http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1770.jpg",
+                            "large": "http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1770.jpg",
+                            "medium": "http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1770.jpg"
+                        },
+                        "name": "埃文·蕾切尔·伍德",
+                        "id": "1035652"
+                    },
+                    ...
+                ],
+                "collect_count": 6073,
+                "original_title": "Westworld",
+                "subtype": "tv",
+                "directors": [
+                    {
+                        "alt": "https://movie.douban.com/celebrity/1332531/",
+                        "avatars": {
+                            "small": "http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1383990641.33.jpg",
+                            "large": "http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1383990641.33.jpg",
+                            "medium": "http://img7.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1383990641.33.jpg"
+                        },
+                        "name": "理查德·J·刘易斯",
+                        "id": "1332531"
+                    }
+                ],
+                "year": "2018",
+                "images": {
+                    "small": "http://img7.doubanio.com/view/photo/s_ratio_poster/public/p2517077652.jpg",
+                    "large": "http://img7.doubanio.com/view/photo/s_ratio_poster/public/p2517077652.jpg",
+                    "medium": "http://img7.doubanio.com/view/photo/s_ratio_poster/public/p2517077652.jpg"
+                },
+                "alt": "https://movie.douban.com/subject/26887174/",
+                "id": "26887174"
+            }
+        ],
+        "title": "搜索 \"西部世界\" 的结果"
+    }
+}
+ *
+ * @apiError err 1成功，其它值看msg字段
+ */
