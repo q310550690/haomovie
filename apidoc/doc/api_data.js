@@ -32,6 +32,13 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "rating.average",
+            "description": "<p>得分</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Array",
             "optional": false,
             "field": "genres",
