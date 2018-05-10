@@ -29,7 +29,7 @@ return [
     // 注册的根命名空间
     'root_namespace'         => [],
     // 默认输出类型
-    'default_return_type'    => 'json',
+    'default_return_type'    => 'html',
     // 默认AJAX 数据返回格式,可选json xml ...
     'default_ajax_return'    => 'json',
     // 默认JSONP格式返回的处理方法
@@ -107,7 +107,7 @@ return [
     // 域名根，如thinkphp.cn
     'url_domain_root'        => '',
     // 是否自动转换URL中的控制器和操作名
-    'url_convert'            => true,
+    'url_convert'            => false,
     // 默认的访问控制器层
     'url_controller_layer'   => 'controller',
     // 表单请求类型伪装变量
